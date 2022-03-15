@@ -1,0 +1,81 @@
+openapi: "3.0.0"
+info:
+  version: "1.0.0"
+  title: "DEDE platform API doc"
+  description: "Here the complete API documentation"
+  contact:
+    email: "apiteam@xxx.xxx"
+tags:
+- name: "Login"
+- name: "Territories"
+- name: "Public"
+- name: "Private"
+servers:
+  - url: "http://localhost:8000/api"
+components:
+  schemas:
+    Territory:
+      type: 'object'
+      properties:
+        id: 
+          type: 'integer'
+    ErrorResponse:
+      type: "object"
+      properties:
+        result:
+          type: "boolean"
+          example: "false"
+        errors:
+          type: "object"
+          properties:
+            error_name:
+              type: string
+  securitySchemes:
+    bearerAuth: 
+      type: http
+      scheme: bearer
+      bearerFormat: jwt
+paths:
+  /login:
+    post:
+      tags:
+        - "Login"
+        - "Public"
+      summary: Login user
+      description: Login user with email and password obtaining access token.
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                email:
+                  description: "The email as username for login"
+                  type: "string"
+                password:
+                  description: "The password for login in clear text"
+                  type: "string"
+      responses:
+        "200":
+          description: "successful operation"
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  email:
+                    description: "Logged in"
+                    type: "string"
+        "401":
+          description: "Unauthorized"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+        "422":
+          description: "Unprocessable entity"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+# https://editor.swagger.io/
